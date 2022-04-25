@@ -6,35 +6,41 @@ User = get_user_model()
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
-    description = models.TextField()
+    title = models.CharField(verbose_name="Название группы", max_length=200)
+    description = models.TextField(verbose_name="Описание группы")
+    slug = models.SlugField(verbose_name="Слаг группы", unique=True)
 
-    def __str__(self) -> str:
+    class Meta:
+        verbose_name = "Группа"
+        verbose_name_plural = "Группы"
+
+    def __str__(self):
         return self.title
 
 
 class Post(models.Model):
-    text = models.TextField(
-        verbose_name='Текст поста',
-        help_text="Текст нового поста")
-    pub_date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(verbose_name="Текст поста")
+
+    pub_date = models.DateTimeField(
+        verbose_name="Дата публикации", auto_now_add=True)
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='posts'
-    )
+        related_name="posts",
+        verbose_name="Автор")
+
     group = models.ForeignKey(
         Group,
-        verbose_name='Группа',
-        help_text="Группа, к которой будет относиться пост",
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-    )
+        verbose_name="Группа")
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ["-pub_date"]
+        verbose_name = "Пост"
+        verbose_name_plural = "Посты"
 
     def __str__(self):
         return self.text
